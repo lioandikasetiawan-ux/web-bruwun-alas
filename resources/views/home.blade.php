@@ -63,7 +63,7 @@
                 <div>
                     <h2 class="text-base font-semibold text-red-600 uppercase tracking-wide mb-2">Tentang Kami</h2>
                     <h3 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6 leading-tight">
-                        Waisata Edukasi & <br>Batik Ecoprint
+                        Wisata Edukasi & <br>Batik Ecoprint
                     </h3>
                     <p class="text-gray-600 text-lg leading-relaxed mb-8 text-justify">
                         Bruwun Alas adalah perusahaan yang berfokus pada produksi dan edukasi batik dan Ecoprint. Dengan

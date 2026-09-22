@@ -38,6 +38,21 @@
                 </div>
             @endif
 
+            @if ($errors->any())
+                <div class="mb-6 p-4 rounded-xl bg-red-50 border border-red-100 text-red-700 flex items-start gap-3 shadow-sm animate-fade-in-up">
+                    <div class="bg-red-100 p-2 rounded-full shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <ul class="font-medium list-disc list-inside">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <form action="{{ route('checkout.store') }}" method="POST" id="checkoutForm">
                 @csrf
                 <input type="hidden" name="province_name" x-model="provinceName">
@@ -191,7 +206,7 @@
                                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
                                     <template x-for="c in ['jne', 'pos', 'jnt', 'tiki']">
                                         <label class="cursor-pointer group">
-                                            <input type="radio" name="courier_code" :value="c"
+                                            <input type="radio" name="courier" :value="c"
                                                 x-model="courier" @change="checkOngkir()" class="peer sr-only"
                                                 :disabled="!cityId">
                                             <div
@@ -350,12 +365,7 @@
                             </div>
 
                             <div class="border-t border-gray-100 pt-4 space-y-3">
-                                <div class="flex justify-between text-sm text-gray-600">
-                                    <span>Berat Total</span>
-                                    <span
-                                        class="font-medium bg-gray-100 px-2 py-0.5 rounded text-xs text-gray-700">{{ $totalWeight > 0 ? $totalWeight : 1000 }}
-                                        Gram</span>
-                                </div>
+
                                 <div class="flex justify-between text-sm text-gray-600">
                                     <span>Subtotal</span>
                                     <span class="font-medium text-gray-900">Rp

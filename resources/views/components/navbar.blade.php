@@ -17,7 +17,7 @@
                             Bruwun<span class="text-red-600">Alas</span>
                         </span>
                         <span class="text-[10px] uppercase tracking-widest text-gray-400 font-medium">Authentic
-                            Taste</span>
+                            Culture</span>
                     </div>
                 </a>
             </div>

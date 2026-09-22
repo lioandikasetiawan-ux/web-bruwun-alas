@@ -31,6 +31,22 @@ class CartController extends Controller
     {
         $identity = $this->getCartIdentity();
 
+        // Clean up any duplicates in the cart
+        $currentCarts = Cart::where($identity['key'], $identity['value'])->get();
+        $grouped = $currentCarts->groupBy('product_variant_id');
+        foreach ($grouped as $variantId => $items) {
+            if ($items->count() > 1) {
+                $firstCart = $items->first();
+                $totalQty = $items->sum('quantity');
+                $firstCart->update(['quantity' => $totalQty]);
+                
+                Cart::where($identity['key'], $identity['value'])
+                    ->where('product_variant_id', $variantId)
+                    ->where('id', '!=', $firstCart->id)
+                    ->delete();
+            }
+        }
+
         $carts = Cart::with(['variant.product'])
             ->where($identity['key'], $identity['value'])
             ->get();

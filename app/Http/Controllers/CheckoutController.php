@@ -29,12 +29,42 @@ class CheckoutController extends Controller
         $guestId = Cookie::get('bruwun_guest_id');
 
         if ($guestId) {
-            Cart::where('guest_id', $guestId)->update([
-                'guest_id' => null,
-                'user_id' => Auth::id()
-            ]);
+            $guestCarts = Cart::where('guest_id', $guestId)->get();
+            foreach ($guestCarts as $guestCart) {
+                $existingUserCart = Cart::where('user_id', Auth::id())
+                    ->where('product_variant_id', $guestCart->product_variant_id)
+                    ->first();
+
+                if ($existingUserCart) {
+                    $existingUserCart->update([
+                        'quantity' => $existingUserCart->quantity + $guestCart->quantity
+                    ]);
+                    $guestCart->delete();
+                } else {
+                    $guestCart->update([
+                        'guest_id' => null,
+                        'user_id' => Auth::id()
+                    ]);
+                }
+            }
 
             Cookie::queue(Cookie::forget('bruwun_guest_id'));
+        }
+
+        // Clean up any duplicates in the user's cart
+        $userCarts = Cart::where('user_id', Auth::id())->get();
+        $grouped = $userCarts->groupBy('product_variant_id');
+        foreach ($grouped as $variantId => $items) {
+            if ($items->count() > 1) {
+                $firstCart = $items->first();
+                $totalQty = $items->sum('quantity');
+                $firstCart->update(['quantity' => $totalQty]);
+                
+                Cart::where('user_id', Auth::id())
+                    ->where('product_variant_id', $variantId)
+                    ->where('id', '!=', $firstCart->id)
+                    ->delete();
+            }
         }
 
         $carts = Cart::with(['variant.product'])
@@ -48,7 +78,8 @@ class CheckoutController extends Controller
         $totalWeight = 0;
         $subtotal = 0;
         foreach ($carts as $cart) {
-            $totalWeight += $cart->variant->product->weight * $cart->quantity;
+            $itemWeight = $cart->variant->product->weight > 0 ? $cart->variant->product->weight : 1000;
+            $totalWeight += $itemWeight * $cart->quantity;
             $subtotal += $cart->variant->price * $cart->quantity;
         }
 
@@ -128,7 +159,7 @@ class CheckoutController extends Controller
                 ->post($url, [
                     'origin'      => config('services.rajaongkir.origin_city'), // ID KOTA ASAL (42)
                     'destination' => $request->city_id, // ID KOTA TUJUAN
-                    'weight'      => $request->weight,
+                    'weight'      => $request->weight > 0 ? $request->weight : 1000,
                     'courier'     => $request->courier
                 ]);
 
@@ -184,7 +215,7 @@ class CheckoutController extends Controller
             'city_name' => 'required',
             'subdistrict' => 'required|string',
             'postal_code' => 'required|string|max:10',
-            'phone' => 'required|numeric',
+            'phone' => 'required|string|max:20',
             'payment_method_id' => 'required|exists:payment_methods,id',
             'shipping_service' => 'required|string',
             'shipping_cost' => 'required|numeric',

@@ -10,10 +10,6 @@
         </div>
 
         <div class="relative z-10 text-center px-4 max-w-4xl mx-auto">
-            <span
-                class="inline-block py-1 px-3 rounded-full bg-red-500/20 border border-red-400 text-red-300 font-semibold text-xs tracking-widest uppercase mb-4 backdrop-blur-sm">
-                Visi Misi Bruwun Alas
-            </span>
             <h1 class="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-6 tracking-tight">
                 Wisata Edukasi & <br> <span
                     class="text-transparent bg-clip-text bg-linear-to-r from-red-300 to-amber-500">Batik Ecoprint</span>

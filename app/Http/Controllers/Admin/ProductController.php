@@ -44,7 +44,6 @@ class ProductController extends Controller
             'product_name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'description' => 'required',
-            'weight' => 'nullable|integer|min:1',
             'thumbnail' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
             'variants' => 'required|array',
             'gender' => 'required|in:pria,wanita,anak,unisex,none'
@@ -78,7 +77,6 @@ class ProductController extends Controller
             'product_name' => $request->product_name,
             'slug' => Str::slug($request->product_name),
             'description' => $request->description,
-            'weight' => $request->weight,
             'thumbnail' => $thumbnailPath,
             'gender' => $request->gender,
             'is_active' => true,
@@ -117,7 +115,6 @@ class ProductController extends Controller
             'product_name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'description' => 'required',
-            'weight' => 'required|integer',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'gender' => 'required|in:pria,wanita,anak,unisex,none',
             'variants' => 'required|array',
@@ -156,7 +153,6 @@ class ProductController extends Controller
                 'product_name' => $request->product_name,
                 'slug' => Str::slug($request->product_name),
                 'description' => $request->description,
-                'weight' => $request->weight,
                 'gender' => $request->gender,
                 'is_active' => $request->has('is_active'),
             ]);

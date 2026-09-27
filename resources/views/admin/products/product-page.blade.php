@@ -52,9 +52,7 @@
                                                 alt="{{ $product->product_name }}">
                                         </div>
                                         <div>
-                                            <div class="text-sm font-bold text-gray-900">{{ $product->product_name }}</div>
-                                            <div class="text-xs text-gray-500 mt-0.5">ID: #{{ $product->id }}</div>
-                                        </div>
+                                            <div class="text-sm font-bold text-gray-900">{{ $product->product_name }}</div>                                        </div>
                                     </div>
                                 </td>
 
